@@ -1,10 +1,6 @@
 export default function HomePage() {
   return (
     <main className="w-full px-6 lg:px-12 py-16 flex flex-col items-center justify-center text-center">
-      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-high border border-white/10 text-primary text-xs font-mono tracking-wider uppercase mb-6">
-        <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-        Architectural Studio Directory
-      </div>
       <h1 className="font-display text-4xl sm:text-6xl font-bold tracking-tight text-on-surface max-w-3xl leading-tight">
         High-Caliber Creative Spaces for <span className="text-primary">Visionary Productions</span>
       </h1>

@@ -3,6 +3,7 @@ import './globals.css';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { Navbar } from '@/components/layout/Navbar';
+import { Footer } from '@/components/layout/Footer';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
@@ -27,6 +28,7 @@ export default function RootLayout({
             <div className="flex-1 pt-20">
               {children}
             </div>
+            <Footer />
             <Toaster position="top-right" richColors theme="dark" />
           </AuthProvider>
         </ThemeProvider>
