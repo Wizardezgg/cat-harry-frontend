@@ -69,13 +69,17 @@ export function Navbar() {
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="w-9 h-9 rounded-lg bg-surface-container-high border border-white/10 flex items-center justify-center text-primary group-hover:border-primary/40 group-hover:scale-105 transition-all">
-              {/* Studio Aperture Shutter Icon */}
-              <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 3.07c2.9.36 5.27 2.37 6.13 5.09L14.4 7.6l-1.4-2.53zM7.06 6.32l4.8 2.77-3.9 3.9-3.4-3.4c.66-1.34 1.54-2.48 2.5-3.27zm-3.04 7.15l3.9-1.05 1.74 4.79-4.32-.97c-.83-.8-1.32-1.77-1.32-2.77zm11.23 6.46l-4.8-2.77 3.9-3.9 3.4 3.4c-.66 1.34-1.54 2.48-2.5 3.27zm3.04-7.15l-3.9 1.05-1.74-4.79 4.32.97c.83.8 1.32 1.77 1.32 2.77z"/>
+              {/* Option 04: Continuous Kinetic Vortex */}
+              <svg className="w-5 h-5 text-primary" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="24" cy="24" r="22" stroke="currentColor" strokeWidth="2" strokeOpacity="0.25" />
+                <path d="M24 4 C32 14 36 24 24 24 C14 24 14 32 24 44" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                <path d="M44 24 C34 32 24 36 24 24 C24 14 32 14 4 24" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeOpacity="0.75" />
+                <circle cx="24" cy="24" r="5.5" fill="currentColor" />
+                <circle cx="24" cy="24" r="2" fill="#121318" />
               </svg>
             </div>
             <span className="font-display font-medium text-xl tracking-tight text-on-surface group-hover:text-primary transition-colors">
-              Studio<span className="text-primary">Space</span>
+              Aperture
             </span>
           </Link>
 

@@ -7,10 +7,15 @@ import { Footer } from '@/components/layout/Footer';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
-  title: 'StudioSpace | Production Studios & Creative Workspaces',
+  title: 'Aperture — Creative Studios',
   description: 'Peer-to-peer sharing platform for photo studios, film stages, sound suites, and artist spaces.',
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico' },
+    ],
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
   },
 };
 

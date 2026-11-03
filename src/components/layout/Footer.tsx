@@ -14,7 +14,7 @@ export function Footer() {
       toast.error('Please enter a valid email address.');
       return;
     }
-    toast.success('Thank you for subscribing to StudioSpace creative dispatch!');
+    toast.success('Thank you for subscribing to Aperture creative dispatch!');
     setEmail('');
   };
 
@@ -27,13 +27,17 @@ export function Footer() {
           <div className="lg:col-span-5 flex flex-col gap-4">
             <Link href="/" className="flex items-center gap-3 group">
               <div className="w-8 h-8 rounded-lg bg-surface-container-high border border-white/10 flex items-center justify-center text-primary group-hover:border-primary/40 transition-colors">
-                {/* Studio Aperture Shutter Icon */}
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 3.07c2.9.36 5.27 2.37 6.13 5.09L14.4 7.6l-1.4-2.53zM7.06 6.32l4.8 2.77-3.9 3.9-3.4-3.4c.66-1.34 1.54-2.48 2.5-3.27zm-3.04 7.15l3.9-1.05 1.74 4.79-4.32-.97c-.83-.8-1.32-1.77-1.32-2.77zm11.23 6.46l-4.8-2.77 3.9-3.9 3.4 3.4c-.66 1.34-1.54 2.48-2.5 3.27zm3.04-7.15l-3.9 1.05-1.74-4.79 4.32.97c.83.8 1.32 1.77 1.32 2.77z"/>
+                {/* Option 04: Continuous Kinetic Vortex */}
+                <svg className="w-4 h-4 text-primary" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="24" cy="24" r="22" stroke="currentColor" strokeWidth="2" strokeOpacity="0.25" />
+                  <path d="M24 4 C32 14 36 24 24 24 C14 24 14 32 24 44" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                  <path d="M44 24 C34 32 24 36 24 24 C24 14 32 14 4 24" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeOpacity="0.75" />
+                  <circle cx="24" cy="24" r="5.5" fill="currentColor" />
+                  <circle cx="24" cy="24" r="2" fill="#121318" />
                 </svg>
               </div>
               <span className="font-display font-medium text-lg tracking-tight text-on-surface group-hover:text-primary transition-colors">
-                Studio<span className="text-primary">Space</span>
+                Aperture
               </span>
             </Link>
             
@@ -47,7 +51,7 @@ export function Footer() {
                 href="https://x.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="StudioSpace on X"
+                aria-label="Aperture on X"
                 className="w-8 h-8 rounded-lg border border-white/10 bg-surface-container-low text-on-surface-variant hover:text-primary hover:border-primary/40 flex items-center justify-center transition-all"
               >
                 {/* Official new X logo (replaces Twitter bird) */}
@@ -60,7 +64,7 @@ export function Footer() {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="StudioSpace on Instagram"
+                aria-label="Aperture on Instagram"
                 className="w-8 h-8 rounded-lg border border-white/10 bg-surface-container-low text-on-surface-variant hover:text-primary hover:border-primary/40 flex items-center justify-center transition-all"
               >
                 <Instagram className="w-3.5 h-3.5" aria-hidden="true" />
@@ -70,7 +74,7 @@ export function Footer() {
                 href="https://youtube.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="StudioSpace on YouTube"
+                aria-label="Aperture on YouTube"
                 className="w-8 h-8 rounded-lg border border-white/10 bg-surface-container-low text-on-surface-variant hover:text-primary hover:border-primary/40 flex items-center justify-center transition-all"
               >
                 <Youtube className="w-3.5 h-3.5" aria-hidden="true" />
@@ -80,7 +84,7 @@ export function Footer() {
                 href="https://linkedin.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="StudioSpace on LinkedIn"
+                aria-label="Aperture on LinkedIn"
                 className="w-8 h-8 rounded-lg border border-white/10 bg-surface-container-low text-on-surface-variant hover:text-primary hover:border-primary/40 flex items-center justify-center transition-all"
               >
                 <Linkedin className="w-3.5 h-3.5" aria-hidden="true" />
@@ -185,7 +189,7 @@ export function Footer() {
 
         {/* Bottom Bar: Copyright & Platform Legal */}
         <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs text-outline gap-4">
-          <p>© {new Date().getFullYear()} StudioSpace Inc. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Aperture Inc. All rights reserved.</p>
           <div className="flex items-center gap-6">
             <Link href="/about-us" className="hover:text-primary transition-colors">
               Terms & Legal
