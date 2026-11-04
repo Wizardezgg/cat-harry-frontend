@@ -6,7 +6,7 @@ import { IStudio } from '@/types';
 import { useAuth } from '@/context/AuthContext';
 import { fetcher } from '@/lib/api';
 import { toast } from 'sonner';
-import { X, Calendar, Clock, ShieldCheck, AlertCircle, Sparkles, CheckCircle2 } from 'lucide-react';
+import { X, Calendar, Clock, ShieldCheck, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 interface BookingModalProps {
   studio: IStudio;
@@ -143,10 +143,6 @@ export function BookingModal({
         {/* Header */}
         <div className="flex items-start justify-between gap-4 pb-4 border-b border-white/5">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 text-[10px] font-mono uppercase tracking-wider mb-2">
-              <Sparkles className="w-3 h-3" />
-              <span>Instant Escrow Reservation</span>
-            </div>
             <h2 className="font-display text-xl font-bold text-on-surface">
               Reserve Workspace
             </h2>
