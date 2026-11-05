@@ -6,6 +6,7 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { useAuth } from '@/context/AuthContext';
 import { IBooking, BookingStatus } from '@/types';
 import { fetcher } from '@/lib/api';
+import { PdfInvoiceButton } from '@/components/booking/PdfInvoiceButton';
 import { toast } from 'sonner';
 import {
   Calendar,
@@ -492,6 +493,9 @@ function MyBookingsContent() {
                   </div>
 
                   <div className="flex items-center gap-2">
+                    {/* Branded PDF Invoice Generator Button */}
+                    <PdfInvoiceButton booking={b} />
+
                     {/* Cancel Booking (available for Pending or Confirmed) */}
                     {(b.status === 'Pending' || b.status === 'Confirmed') && (
                       <button
