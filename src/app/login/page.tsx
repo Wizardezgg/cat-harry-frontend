@@ -93,12 +93,6 @@ function LoginFormContent() {
     }
   };
 
-  const handleForgotPassword = (e: React.MouseEvent) => {
-    e.preventDefault();
-    toast.info('Examiner Demo Mode', {
-      description: 'Use the 1-click test buttons below for instant credential access.',
-    });
-  };
 
   return (
     <div className="min-h-[82vh] flex items-center justify-center px-4 py-12 sm:py-16">
@@ -182,22 +176,13 @@ function LoginFormContent() {
 
             {/* Password Field */}
             <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="font-mono text-xs uppercase tracking-wider text-on-surface-variant flex items-center gap-1.5"
-                >
-                  <Lock className="w-3.5 h-3.5 text-primary" />
-                  Password
-                </label>
-                <button
-                  type="button"
-                  onClick={handleForgotPassword}
-                  className="text-[11px] font-sans text-primary hover:underline"
-                >
-                  Forgot password?
-                </button>
-              </div>
+              <label
+                htmlFor="password"
+                className="font-mono text-xs uppercase tracking-wider text-on-surface-variant flex items-center gap-1.5"
+              >
+                <Lock className="w-3.5 h-3.5 text-primary" />
+                Password
+              </label>
 
               <div className="relative">
                 <input
