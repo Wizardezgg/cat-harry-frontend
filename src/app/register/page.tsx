@@ -71,25 +71,6 @@ export default function RegisterPage() {
     }
   };
 
-  // Fast Fill sample profile for examiner
-  const handleFastFill = (fillRole: 'creator' | 'host') => {
-    setRole(fillRole);
-    if (fillRole === 'creator') {
-      setName('Marcus Vance');
-      setEmail('marcus@studiospace.com');
-      setPhotoUrl('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80');
-      setPassword('Creator@1234');
-    } else {
-      setName('Elena Rostova');
-      setEmail('elena@studiospace.com');
-      setPhotoUrl('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80');
-      setPassword('Host@1234');
-    }
-    toast.info('Sample Profile Autofilled', {
-      description: `Loaded verified ${fillRole.toUpperCase()} credentials meeting all security criteria.`,
-    });
-  };
-
   const handleGoogleLogin = async () => {
     setSubmitting(true);
     try {
@@ -120,35 +101,6 @@ export default function RegisterPage() {
           <p className="font-sans text-xs text-on-surface-variant max-w-sm mx-auto">
             Book verified soundstages, access audio mixing suites, or list your private studio space.
           </p>
-        </div>
-
-        {/* 1-Click Fast Fill for Examiner */}
-        <div className="p-4 rounded-2xl bg-surface-container-low border border-primary/20 space-y-2.5 shadow-lg shadow-black/20">
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-[10px] text-primary uppercase tracking-widest font-bold flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-primary" />
-              Examiner Test Autofill
-            </span>
-            <span className="text-[10px] font-mono text-outline">Pre-populates Form</span>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => handleFastFill('creator')}
-              className="py-2 px-3 rounded-xl bg-surface-container hover:bg-surface-container-high border border-white/10 text-xs font-sans text-on-surface hover:text-primary transition-all text-left"
-            >
-              <div className="font-semibold">🎬 Creator Profile</div>
-              <div className="text-[10px] font-mono text-outline truncate">Marcus Vance</div>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleFastFill('host')}
-              className="py-2 px-3 rounded-xl bg-surface-container hover:bg-surface-container-high border border-white/10 text-xs font-sans text-on-surface hover:text-primary transition-all text-left"
-            >
-              <div className="font-semibold">👑 Studio Host</div>
-              <div className="text-[10px] font-mono text-outline truncate">Elena Rostova</div>
-            </button>
-          </div>
         </div>
 
         {/* Register Card Frame */}

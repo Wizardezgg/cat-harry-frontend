@@ -55,28 +55,6 @@ function LoginFormContent() {
     }
   };
 
-  // 1-Click Fast Fill for Examiner
-  const handleQuickLogin = async (role: 'host' | 'creator') => {
-    setSubmitting(true);
-    const targetEmail = role === 'host' ? 'host@studiospace.com' : 'creator@studiospace.com';
-    const targetPass = role === 'host' ? 'Host@1234' : 'Creator@1234';
-
-    setEmail(targetEmail);
-    setPassword(targetPass);
-
-    try {
-      const loggedUser = await login(targetEmail, targetPass);
-      toast.success('Examiner Fast Sign-In Successful', {
-        description: `Logged in as ${loggedUser.name} [${role.toUpperCase()}]. Redirecting...`,
-      });
-      router.push(redirectUrl);
-    } catch {
-      toast.error('Quick login failed');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   // Google Sign-In
   const handleGoogleLogin = async () => {
     setSubmitting(true);
@@ -109,46 +87,6 @@ function LoginFormContent() {
           <p className="font-sans text-xs text-on-surface-variant max-w-xs mx-auto">
             Access verified soundstages, production suites, and host management commands.
           </p>
-        </div>
-
-        {/* 1-Click Examiner Quick Fill Banner */}
-        <div className="p-4 rounded-2xl bg-surface-container-low border border-primary/20 space-y-2.5 shadow-lg shadow-black/20">
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-[10px] text-primary uppercase tracking-widest font-bold flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-primary" />
-              Examiner Quick Access
-            </span>
-            <span className="text-[10px] font-mono text-outline">1-Click Auth</span>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => handleQuickLogin('host')}
-              disabled={submitting}
-              className="py-2 px-3 rounded-xl bg-surface-container hover:bg-surface-container-high border border-white/10 text-left transition-all group"
-            >
-              <div className="font-display text-xs font-semibold text-on-surface group-hover:text-primary flex items-center gap-1">
-                <span>👑 Host Account</span>
-              </div>
-              <div className="font-mono text-[10px] text-outline truncate">
-                host@studiospace.com
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleQuickLogin('creator')}
-              disabled={submitting}
-              className="py-2 px-3 rounded-xl bg-surface-container hover:bg-surface-container-high border border-white/10 text-left transition-all group"
-            >
-              <div className="font-display text-xs font-semibold text-on-surface group-hover:text-primary flex items-center gap-1">
-                <span>🎬 Creator Account</span>
-              </div>
-              <div className="font-mono text-[10px] text-outline truncate">
-                creator@studiospace.com
-              </div>
-            </button>
-          </div>
         </div>
 
         {/* Login Card Frame */}

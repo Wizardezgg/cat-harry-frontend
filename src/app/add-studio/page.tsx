@@ -78,31 +78,6 @@ function AddStudioForm() {
   const [overview, setOverview] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  // Quick fill helper for examiners to test instantaneously
-  const handleQuickFill = () => {
-    setTitle('Kalliope Stage 3: Two-Wall Curved Cyclorama');
-    setCategory('Film Soundstage');
-    setHourlyRate(135);
-    setSecurityDeposit(200);
-    setMaxCapacity(35);
-    setAddress('630 Flushing Ave, Suite 400');
-    setCity('Brooklyn');
-    setState('NY');
-    setImageUrl('https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=1200&q=80');
-    setSelectedAmenities([
-      'Seamless Cyclorama Cove',
-      'Motorized Overhead Lighting Grid',
-      'Three-Phase 200A Cam-Lok Power',
-      'Silent Acoustical HVAC (NC-20)',
-      'Drive-In Elephant Roll-Up Door',
-      '1Gbps Dedicated Fiber Internet',
-    ]);
-    setOverview(
-      'Brand new 3,800 sq ft production stage with full acoustic treatment and 18ft clearance to motorized lighting grid. Equipped with three-phase 200A Cam-Lok power, silent HVAC, and ground floor drive-in access for lighting trucks and camera vans.'
-    );
-    toast.info('Form populated with demo studio specifications!');
-  };
-
   const toggleAmenity = (amenity: string) => {
     setSelectedAmenities((prev) =>
       prev.includes(amenity) ? prev.filter((a) => a !== amenity) : [...prev, amenity]
@@ -197,16 +172,6 @@ function AddStudioForm() {
             Publish your photo cyc wall, soundstage, audio suite, or atelier for peer-to-peer booking
           </p>
         </div>
-
-        {/* Examiner Quick-Fill Helper */}
-        <button
-          type="button"
-          onClick={handleQuickFill}
-          className="self-start sm:self-auto inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface-container-high border border-primary/30 text-primary text-xs font-mono hover:bg-primary hover:text-on-primary transition-all shadow-sm"
-        >
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Examiner Auto-Fill</span>
-        </button>
       </div>
 
       {/* Main Submission Form */}

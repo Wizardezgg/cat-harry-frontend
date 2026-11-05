@@ -6,7 +6,7 @@
 
 ## 🌐 Live Deployments & Repository Links
 
-- **Frontend Client (Vercel)**: [https://aperture-studio-git-main-wi-z1.vercel.app](https://aperture-studio-git-main-wi-z1.vercel.app)
+- **Frontend Client (Vercel)**: [https://aperture-studio-olive.vercel.app](https://aperture-studio-olive.vercel.app)
 - **Backend API (Vercel)**: [https://aperture-eight-eosin.vercel.app](https://aperture-eight-eosin.vercel.app)
 - **API Health Endpoint**: [https://aperture-eight-eosin.vercel.app/health](https://aperture-eight-eosin.vercel.app/health)
 - **Frontend Repository**: [https://github.com/Wizardezgg/cat-harry-frontend](https://github.com/Wizardezgg/cat-harry-frontend)
