@@ -62,19 +62,14 @@ function AddStudioForm() {
   const router = useRouter();
 
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('Photo Studio');
+  const [category, setCategory] = useState('');
   const [hourlyRate, setHourlyRate] = useState<number | ''>('');
-  const [securityDeposit, setSecurityDeposit] = useState<number | ''>(150);
-  const [maxCapacity, setMaxCapacity] = useState<number | ''>(15);
+  const [securityDeposit, setSecurityDeposit] = useState<number | ''>('');
+  const [maxCapacity, setMaxCapacity] = useState<number | ''>('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
-  const [state, setState] = useState('NY');
   const [imageUrl, setImageUrl] = useState('');
-  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([
-    'Seamless Cyclorama Cove',
-    'Arri SkyPanel S60-C Softboxes',
-    'Three-Phase 200A Cam-Lok Power',
-  ]);
+  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [overview, setOverview] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -92,13 +87,18 @@ function AddStudioForm() {
       return;
     }
 
+    if (!category) {
+      toast.error('Please select a creative discipline category');
+      return;
+    }
+
     if (!hourlyRate || Number(hourlyRate) <= 0) {
       toast.error('Please specify a valid hourly rate');
       return;
     }
 
     if (!address.trim() || !city.trim()) {
-      toast.error('Studio location and city are required');
+      toast.error('Studio address and city are required');
       return;
     }
 
@@ -115,23 +115,22 @@ function AddStudioForm() {
     setSubmitting(true);
     try {
       const payload = {
-        title,
+        title: title.trim(),
         category,
         hourlyRate: Number(hourlyRate),
-        securityDeposit: Number(securityDeposit) || 100,
+        securityDeposit: Number(securityDeposit) || 0,
         maxCapacity: Number(maxCapacity) || 10,
         location: {
-          address,
-          city,
-          state,
-          zip: '10001',
+          address: address.trim(),
+          city: city.trim(),
         },
-        imageUrl,
-        gallery: [imageUrl],
+        imageUrl: imageUrl.trim(),
+        gallery: [imageUrl.trim()],
         amenities: selectedAmenities,
-        overview,
-        ownerName: user?.name || 'Verified Creator',
-        ownerEmail: user?.email || 'creator@studiospace.com',
+        overview: overview.trim(),
+        ownerId: user?._id || user?.email || 'host_user',
+        ownerName: user?.name || 'Verified Host',
+        ownerEmail: (user?.email || '').toLowerCase(),
       };
 
       await fetcher('/studios', {
@@ -144,11 +143,9 @@ function AddStudioForm() {
       });
       router.push('/my-listings');
     } catch (err: any) {
-      // If server is not yet connected, save locally or simulate success
-      toast.success('Studio Published Successfully (Local Mode)!', {
-        description: `${title} has been staged for production bookings.`,
+      toast.error('Failed to Publish Studio', {
+        description: err?.message || 'Could not save studio to network.',
       });
-      router.push('/my-listings');
     } finally {
       setSubmitting(false);
     }
@@ -208,8 +205,10 @@ function AddStudioForm() {
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
+                required
                 className="w-full px-4 py-3 bg-surface-container border border-white/10 rounded-xl text-xs text-on-surface focus:outline-none focus:border-primary/60 font-sans cursor-pointer"
               >
+                <option value="" disabled>Select Creative Discipline Category...</option>
                 <option value="Photo Studio">Photo Studio</option>
                 <option value="Film Soundstage">Film Soundstage</option>
                 <option value="Recording & Podcast Suite">Recording & Podcast Suite</option>
@@ -295,8 +294,8 @@ function AddStudioForm() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            <div className="sm:col-span-3 space-y-1.5">
+          <div className="space-y-4">
+            <div className="space-y-1.5">
               <label className="text-xs font-mono uppercase text-outline">
                 Physical Street Address *
               </label>
@@ -304,21 +303,7 @@ function AddStudioForm() {
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder="e.g. Building 77, Brooklyn Navy Yard"
-                required
-                className="w-full px-4 py-3 bg-surface-container border border-white/10 rounded-xl text-xs text-on-surface focus:outline-none focus:border-primary/60 font-sans"
-              />
-            </div>
-
-            <div className="sm:col-span-2 space-y-1.5">
-              <label className="text-xs font-mono uppercase text-outline">
-                City / Metro *
-              </label>
-              <input
-                type="text"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                placeholder="e.g. Brooklyn"
+                placeholder="e.g. 77, Shamoli"
                 required
                 className="w-full px-4 py-3 bg-surface-container border border-white/10 rounded-xl text-xs text-on-surface focus:outline-none focus:border-primary/60 font-sans"
               />
@@ -326,16 +311,15 @@ function AddStudioForm() {
 
             <div className="space-y-1.5">
               <label className="text-xs font-mono uppercase text-outline">
-                State *
+                City / Metro *
               </label>
               <input
                 type="text"
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-                placeholder="NY"
-                maxLength={2}
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                placeholder="e.g. Dhaka"
                 required
-                className="w-full px-4 py-3 bg-surface-container border border-white/10 rounded-xl text-xs text-on-surface focus:outline-none focus:border-primary/60 font-mono uppercase"
+                className="w-full px-4 py-3 bg-surface-container border border-white/10 rounded-xl text-xs text-on-surface focus:outline-none focus:border-primary/60 font-sans"
               />
             </div>
           </div>
@@ -461,7 +445,7 @@ function AddStudioForm() {
                   Host Name (Read-Only)
                 </span>
                 <p className="text-xs font-bold text-on-surface">
-                  {user?.name || 'Elena Rostova'}
+                  {user?.name || 'Verified Host'}
                 </p>
               </div>
 
@@ -470,7 +454,7 @@ function AddStudioForm() {
                   Host Contact Email (Read-Only)
                 </span>
                 <p className="text-xs font-mono text-primary truncate">
-                  {user?.email || 'creator@studiospace.com'}
+                  {user?.email || 'Sign in to publish'}
                 </p>
               </div>
             </div>

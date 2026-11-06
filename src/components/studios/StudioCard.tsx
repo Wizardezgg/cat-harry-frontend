@@ -45,17 +45,24 @@ export function StudioCard({ studio, initialWishlisted = false, onWishlistToggle
 
     try {
       setLoadingWishlist(true);
-      const res = await fetcher<{ success: boolean; saved: boolean; message: string }>('/wishlists/toggle', {
+      const res = await fetcher<{ success: boolean; saved?: boolean; isSaved?: boolean; message: string }>('/wishlist/toggle', {
         method: 'POST',
-        body: JSON.stringify({ studioId: studio._id }),
+        body: JSON.stringify({
+          studioId: studio._id,
+          userId: user._id || user.email,
+          userEmail: user.email,
+        }),
       });
-      setWishlisted(res.saved);
+      const isNowSaved = res.saved ?? res.isSaved ?? !wishlisted;
+      setWishlisted(isNowSaved);
       toast.success(res.message);
       if (onWishlistToggle) {
-        onWishlistToggle(studio._id, res.saved);
+        onWishlistToggle(studio._id, isNowSaved);
       }
-    } catch {
-      toast.error('Failed to update wishlist.');
+    } catch (err: any) {
+      toast.error('Failed to update wishlist.', {
+        description: err?.message || 'Could not update saved status.',
+      });
     } finally {
       setLoadingWishlist(false);
     }
@@ -106,7 +113,7 @@ export function StudioCard({ studio, initialWishlisted = false, onWishlistToggle
         {/* Rating Badge */}
         <div className="absolute bottom-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-md bg-surface/85 backdrop-blur-md border border-white/10 text-xs font-mono text-primary">
           <Star className="w-3 h-3 fill-current" />
-          <span className="font-bold">{studio.rating ? studio.rating.toFixed(2) : '5.00'}</span>
+          <span className="font-bold">{reviews > 0 && studio.rating ? studio.rating.toFixed(2) : '0.00'}</span>
           <span className="text-on-surface-variant text-[10px]">({reviews})</span>
         </div>
       </div>

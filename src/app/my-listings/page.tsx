@@ -47,68 +47,11 @@ interface HostStudioItem {
   badgeNote?: string;
 }
 
-const defaultHostStudios: HostStudioItem[] = [
-  {
-    _id: 'std_01',
-    idCode: 'ST-9042',
-    slug: 'sonder-stage-a',
-    title: 'Sonder Stage A - Soundproof Cinema Loft',
-    category: 'Film Soundstage',
-    location: 'Brooklyn Navy Yard, Building 77, Brooklyn, NY',
-    hourlyRate: 145,
-    status: 'Active',
-    monthBookings: 18,
-    mtdRevenue: 14200,
-    rating: 4.95,
-    reviewsCount: 38,
-    imageUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80',
-    description:
-      '4,800 sq ft soundproof studio featuring 22ft clear grid height, 3-phase 400A camlock power drops, dedicated scissor lift access, and climate-controlled client mezzanine.',
-    badgeNote: 'Instant Booking Active',
-  },
-  {
-    _id: 'std_02',
-    idCode: 'ST-8812',
-    slug: 'apex-daylight-loft',
-    title: 'Apex Natural Daylight Loft & Still Studio',
-    category: 'Photo Studio',
-    location: 'SoHo Cast Iron District, 102 Prince St, New York, NY',
-    hourlyRate: 95,
-    status: 'Active',
-    monthBookings: 14,
-    mtdRevenue: 8550,
-    rating: 4.91,
-    reviewsCount: 44,
-    imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
-    description:
-      'Historic loft bathed in continuous northern light through 14ft industrial steel casement windows. Hardwood factory floors and modular mid-century furniture sets.',
-    badgeNote: 'Overnight Hold Enabled',
-  },
-  {
-    _id: 'std_03',
-    idCode: 'ST-7190',
-    slug: 'echo-chamber-atmos',
-    title: 'Echo Chamber: Dolby Atmos 7.1.4 Mixing Suite',
-    category: 'Recording & Podcast Suite',
-    location: 'Arts District, 830 E 3rd St, Los Angeles, CA',
-    hourlyRate: 110,
-    status: 'Active',
-    monthBookings: 10,
-    mtdRevenue: 5700,
-    rating: 4.98,
-    reviewsCount: 29,
-    imageUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80',
-    description:
-      'Acoustically isolated control room tuned to Dolby Atmos specifications with Genelec SAM monitors, Avid S6 console, and floating concrete floors.',
-    badgeNote: 'Certified Engineer Included',
-  },
-];
-
 function MyListingsContent() {
   const { user } = useAuth();
   const router = useRouter();
 
-  const [studios, setStudios] = useState<HostStudioItem[]>(defaultHostStudios);
+  const [studios, setStudios] = useState<HostStudioItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [syncing, setSyncing] = useState<boolean>(false);
 
@@ -127,11 +70,17 @@ function MyListingsContent() {
   // Fetch host listings
   useEffect(() => {
     async function loadHostStudios() {
+      if (!user?.email) {
+        setLoading(false);
+        return;
+      }
+
       try {
-        const res = await fetcher<{ success: boolean; studios: any[] }>('/studios/my-listings');
+        const emailQuery = `?ownerEmail=${encodeURIComponent(user.email)}`;
+        const res = await fetcher<{ success: boolean; studios: any[] }>(`/studios/my-listings${emailQuery}`);
         if (res.success && res.studios && res.studios.length > 0) {
           const mapped: HostStudioItem[] = res.studios.map((st, idx) => ({
-            _id: st._id || `std_${idx + 1}`,
+            _id: st._id || String(idx + 1),
             idCode: `ST-${st._id ? st._id.slice(-4).toUpperCase() : 9000 + idx}`,
             slug: st.title
               ? st.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')
@@ -146,10 +95,18 @@ function MyListingsContent() {
                 : 'Creative District',
             hourlyRate: st.hourlyRate || st.pricePerHour || 120,
             status: 'Active',
-            monthBookings: 12 + idx * 3,
-            mtdRevenue: (st.hourlyRate || 120) * (12 + idx * 3) * 4,
-            rating: st.rating || 4.95,
-            reviewsCount: st.reviewsCount || st.reviewCount || 30,
+            monthBookings: st.monthBookings || st.bookingsCount || 0,
+            mtdRevenue: st.mtdRevenue || (st.monthBookings ? (st.hourlyRate || 120) * st.monthBookings * 4 : 0),
+            rating:
+              (st.reviewsCount > 0 || st.reviewCount > 0) && typeof st.rating === 'number'
+                ? st.rating
+                : 0,
+            reviewsCount:
+              typeof st.reviewsCount === 'number'
+                ? st.reviewsCount
+                : typeof st.reviewCount === 'number'
+                ? st.reviewCount
+                : 0,
             imageUrl:
               st.imageUrl ||
               (st.images && st.images[0]) ||
@@ -159,12 +116,10 @@ function MyListingsContent() {
           }));
           setStudios(mapped);
         } else {
-          // Keep resilient defaults
-          setStudios(defaultHostStudios);
+          setStudios([]);
         }
       } catch {
-        // Graceful fallback to default host roster
-        setStudios(defaultHostStudios);
+        setStudios([]);
       } finally {
         setLoading(false);
       }
@@ -249,13 +204,14 @@ function MyListingsContent() {
 
   // Aggregate Metrics
   const activeCount = studios.filter((s) => s.status === 'Active').length;
-  const totalMonthBookings = studios.reduce((acc, curr) => acc + curr.monthBookings, 0);
-  const totalMtdRevenue = studios.reduce((acc, curr) => acc + curr.mtdRevenue, 0);
+  const totalMonthBookings = studios.reduce((acc, curr) => acc + (curr.monthBookings || 0), 0);
+  const totalMtdRevenue = studios.reduce((acc, curr) => acc + (curr.mtdRevenue || 0), 0);
+  const reviewedStudios = studios.filter((s) => s.reviewsCount > 0);
   const avgRating =
-    studios.length > 0
-      ? (studios.reduce((acc, curr) => acc + curr.rating, 0) / studios.length).toFixed(2)
-      : '5.00';
-  const totalReviews = studios.reduce((acc, curr) => acc + curr.reviewsCount, 0);
+    reviewedStudios.length > 0
+      ? (reviewedStudios.reduce((acc, curr) => acc + curr.rating, 0) / reviewedStudios.length).toFixed(2)
+      : '0.00';
+  const totalReviews = studios.reduce((acc, curr) => acc + (curr.reviewsCount || 0), 0);
 
   return (
     <div className="max-w-7xl mx-auto px-6 lg:px-12 py-10 sm:py-14 space-y-8">
@@ -327,8 +283,12 @@ function MyListingsContent() {
               {totalMonthBookings} Sessions
             </span>
             <div className="flex items-center gap-2 mt-2">
-              <span className="text-tertiary font-mono text-xs font-semibold">94% OCCUPANCY</span>
-              <span className="text-on-surface-variant font-sans text-xs">• Target Met</span>
+              <span className="text-tertiary font-mono text-xs font-semibold">
+                {totalMonthBookings > 0 ? `${totalMonthBookings} BOOKED` : '0% OCCUPANCY'}
+              </span>
+              <span className="text-on-surface-variant font-sans text-xs">
+                {totalMonthBookings > 0 ? '• Active Schedule' : '• Ready for Bookings'}
+              </span>
             </div>
           </div>
           <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-tertiary/30 to-transparent" />
@@ -348,9 +308,11 @@ function MyListingsContent() {
             </span>
             <div className="flex items-center gap-1.5 mt-2">
               <span className="bg-primary/10 text-primary px-1.5 py-0.5 rounded font-mono text-xs font-bold">
-                +$4,200
+                {totalMtdRevenue > 0 ? `+$${totalMtdRevenue.toLocaleString()}` : '$0'}
               </span>
-              <span className="font-sans text-xs text-on-surface-variant">vs previous 30 days</span>
+              <span className="font-sans text-xs text-on-surface-variant">
+                {totalMtdRevenue > 0 ? 'gross revenue' : 'no sessions yet'}
+              </span>
             </div>
           </div>
           <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
@@ -372,8 +334,12 @@ function MyListingsContent() {
               <span className="font-mono text-xs text-primary font-semibold">★</span>
             </div>
             <div className="flex items-center gap-2 mt-2">
-              <span className="font-sans text-xs text-on-surface">{totalReviews} verified reviews</span>
-              <span className="text-primary font-mono text-[10px] uppercase tracking-wider">• Top Tier</span>
+              <span className="font-sans text-xs text-on-surface">
+                {totalReviews} {totalReviews === 1 ? 'verified review' : 'verified reviews'}
+              </span>
+              <span className="text-primary font-mono text-[10px] uppercase tracking-wider">
+                {totalReviews > 0 ? '• Top Tier' : '• New Host'}
+              </span>
             </div>
           </div>
           <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
@@ -579,26 +545,32 @@ function MyListingsContent() {
                       </span>
                       <span className="font-sans text-xs text-on-surface flex items-center gap-1">
                         <Star className="w-3.5 h-3.5 text-primary fill-current" />
-                        <span>{studio.rating.toFixed(2)}</span>
+                        <span>{studio.reviewsCount > 0 ? studio.rating.toFixed(2) : '0.00'}</span>
                         <span className="text-outline">({studio.reviewsCount})</span>
                       </span>
                     </div>
                   </div>
 
-                  {/* Micro Sparkline SVG */}
+                  {/* Micro Sparkline SVG or Status */}
                   <div className="hidden md:flex items-center gap-2">
                     <span className="font-mono text-[10px] text-on-surface-variant uppercase">
-                      30D Trend
+                      {studio.monthBookings > 0 ? '30D Trend' : 'Activity'}
                     </span>
-                    <svg className="w-20 h-6 text-primary" fill="none" viewBox="0 0 80 24">
-                      <path
-                        d="M0 18 L15 14 L30 19 L45 8 L60 11 L75 3 L80 5"
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="1.75"
-                      />
-                    </svg>
+                    {studio.monthBookings > 0 ? (
+                      <svg className="w-20 h-6 text-primary" fill="none" viewBox="0 0 80 24">
+                        <path
+                          d="M0 18 L15 14 L30 19 L45 8 L60 11 L75 3 L80 5"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.75"
+                        />
+                      </svg>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded bg-surface border border-white/5 font-mono text-[10px] text-outline">
+                        Ready for shoots
+                      </span>
+                    )}
                   </div>
                 </div>
 

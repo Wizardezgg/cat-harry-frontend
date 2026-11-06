@@ -8,112 +8,7 @@ import { IStudio } from '@/types';
 import { fetcher } from '@/lib/api';
 import { Search, SlidersHorizontal, ArrowUpDown, X, Sparkles } from 'lucide-react';
 
-const fallbackStudios: any[] = [
-  {
-    _id: 'std_01',
-    title: 'Sonder Stage A: 40ft Pre-Lit White Cyclorama',
-    category: 'Film Soundstage',
-    hourlyRate: 145,
-    maxCapacity: 45,
-    location: 'Brooklyn Navy Yard, NY',
-    imageUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80',
-    amenities: ['40ft Seamless Cyclorama', 'Arri SkyPanels', '200A Cam-Lok Power', 'Silent HVAC'],
-    rating: 4.95,
-    reviewCount: 38,
-    featured: true,
-  },
-  {
-    _id: 'std_02',
-    title: 'Apex Natural Daylight Loft & Still Studio',
-    category: 'Photo Studio',
-    hourlyRate: 95,
-    maxCapacity: 25,
-    location: 'SoHo Cast Iron District, NY',
-    imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
-    amenities: ['Continuous North Daylight', '14ft Ceilings', 'Profoto B10X Kit', 'Maple Plank Floors'],
-    rating: 4.91,
-    reviewCount: 44,
-    featured: true,
-  },
-  {
-    _id: 'std_03',
-    title: 'Echo Chamber: Dolby Atmos 7.1.4 Mixing Suite',
-    category: 'Recording & Podcast Suite',
-    hourlyRate: 110,
-    maxCapacity: 12,
-    location: 'Arts District, Los Angeles, CA',
-    imageUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80',
-    amenities: ['Dolby Atmos 7.1.4', 'Genelec SAM', 'Neumann U87 Mics', 'Floating Acoustic Floor'],
-    rating: 4.98,
-    reviewCount: 29,
-    featured: true,
-  },
-  {
-    _id: 'std_04',
-    title: 'Warehouse 47 Industrial Daylight & Concrete Studio',
-    category: 'Film Soundstage',
-    hourlyRate: 130,
-    maxCapacity: 60,
-    location: 'West Loop, Chicago, IL',
-    imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
-    amenities: ['Drive-In Vehicle Access', 'Polished Concrete', '400A Heavy Distribution', 'Full Sound System'],
-    rating: 4.88,
-    reviewCount: 31,
-    featured: true,
-  },
-  {
-    _id: 'std_05',
-    title: 'Solstice Sprung-Wood Movement & Dance Rehearsal Hall',
-    category: 'Dance & Rehearsal Hall',
-    hourlyRate: 75,
-    maxCapacity: 35,
-    location: 'Mission District, San Francisco, CA',
-    imageUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=1200&q=80',
-    amenities: ['Harlequin Sprung Hardwood', '30ft Continuous Mirror Wall', 'High-Power Bluetooth PA'],
-    rating: 4.93,
-    reviewCount: 22,
-    featured: false,
-  },
-  {
-    _id: 'std_06',
-    title: 'Komorebi Sunlit Ceramic Atelier & Fine Arts Loft',
-    category: 'Art & Ceramic Atelier',
-    hourlyRate: 65,
-    maxCapacity: 18,
-    location: 'South Congress, Austin, TX',
-    imageUrl: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=1200&q=80',
-    amenities: ['Shimpo Electric Wheels', 'Clay Slab Roller', 'Deep Stainless Slurry Sinks'],
-    rating: 4.96,
-    reviewCount: 19,
-    featured: false,
-  },
-  {
-    _id: 'std_07',
-    title: 'Neon Noir Cyberpunk Sound & Film Stage',
-    category: 'Film Soundstage',
-    hourlyRate: 155,
-    maxCapacity: 40,
-    location: 'Williamsburg, Brooklyn, NY',
-    imageUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=1200&q=80',
-    amenities: ['DMX RGB Tube Matrix', 'Gloss Reflective Epoxy Floor', 'Martin Fog Generator'],
-    rating: 4.97,
-    reviewCount: 35,
-    featured: true,
-  },
-  {
-    _id: 'std_08',
-    title: 'The Greenhouse Glass-Roof Photo Studio',
-    category: 'Photo Studio',
-    hourlyRate: 105,
-    maxCapacity: 20,
-    location: 'Capitol Hill, Seattle, WA',
-    imageUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80',
-    amenities: ['Pitched Conservatory Roof', 'Living Exotic Plants', 'UV Diffusion Silk Screens'],
-    rating: 4.94,
-    reviewCount: 27,
-    featured: false,
-  },
-];
+
 
 const categoryTabs = [
   'All Spaces',
@@ -149,13 +44,13 @@ function ExploreContent() {
     async function loadStudios() {
       try {
         const res = await fetcher<{ success: boolean; studios: IStudio[] }>('/studios');
-        if (res.success && res.studios && res.studios.length > 0) {
+        if (res.success && res.studios) {
           setStudios(res.studios);
         } else {
-          setStudios(fallbackStudios as IStudio[]);
+          setStudios([]);
         }
       } catch {
-        setStudios(fallbackStudios as IStudio[]);
+        setStudios([]);
       } finally {
         setLoading(false);
       }

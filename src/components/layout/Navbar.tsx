@@ -144,11 +144,17 @@ export function Navbar() {
                     Creator
                   </span>
                 </div>
-                <img
-                  src={user.photoUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80'}
-                  alt={user.name}
-                  className="w-7 h-7 rounded-full object-cover ring-1 ring-primary/40"
-                />
+                {user.photoUrl && !user.photoUrl.includes('photo-1534528741775') ? (
+                  <img
+                    src={user.photoUrl}
+                    alt={user.name}
+                    className="w-7 h-7 rounded-full object-cover ring-1 ring-primary/40"
+                  />
+                ) : (
+                  <div className="w-7 h-7 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs font-mono ring-1 ring-primary/40">
+                    {(user.name || 'U').charAt(0).toUpperCase()}
+                  </div>
+                )}
                 <ChevronDown className="w-3.5 h-3.5 text-on-surface-variant mr-1" />
               </button>
 

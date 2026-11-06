@@ -3,6 +3,8 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { IUser } from '../types';
 import { fetcher } from '../lib/api';
+import { signInWithPopup } from 'firebase/auth';
+import { getFirebaseAuthInstance } from '../lib/firebase';
 
 interface AuthContextType {
   user: IUser | null;
@@ -30,6 +32,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (cached) {
           const parsed = JSON.parse(cached);
           if (parsed && parsed.email) {
+            if (parsed.photoUrl && parsed.photoUrl.includes('photo-1534528741775')) {
+              parsed.photoUrl = '';
+              localStorage.setItem('aperture_user', JSON.stringify(parsed));
+            }
             setUser(parsed);
           }
         }
@@ -77,23 +83,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return data.user;
       }
       throw new Error(data?.message || 'Login failed');
-    } catch {
-      // Graceful examiner test login fallback if backend server is not running
-      const isHost = email.toLowerCase().includes('host') || email.toLowerCase().includes('elena');
-      const fallbackUser: IUser = {
-        _id: isHost ? 'host_elena' : 'creator_marcus',
-        name: isHost ? 'Elena Rostova' : 'Marcus Vance',
-        email: email || (isHost ? 'host@studiospace.com' : 'creator@studiospace.com'),
-        role: isHost ? 'host' : 'creator',
-        photoUrl: isHost
-          ? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'
-          : 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
-      };
-      setUser(fallbackUser);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('aperture_user', JSON.stringify(fallbackUser));
-      }
-      return fallbackUser;
+    } catch (err: any) {
+      throw err;
     }
   };
 
@@ -109,32 +100,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         method: 'POST',
         body: JSON.stringify({ name, email, photoUrl, password, role }),
       });
-    } catch {
-      // Fallback local registration record for seamless client testing
-      const newUser: IUser = {
-        _id: `user_${Date.now()}`,
-        name,
-        email,
-        photoUrl: photoUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-        role,
-      };
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('aperture_user', JSON.stringify(newUser));
-      }
+    } catch (err: any) {
+      throw err;
     }
   };
 
-  const googleLogin = async (name?: string, email?: string, photoUrl?: string): Promise<IUser> => {
+  const googleLogin = async (): Promise<IUser> => {
+    const { auth, googleProvider } = getFirebaseAuthInstance();
+    if (!auth || !googleProvider) {
+      throw new Error('Google authentication service is initializing. Please try again.');
+    }
+
+    // 1. Trigger real Google OAuth popup via Firebase
+    const result = await signInWithPopup(auth, googleProvider);
+    const fbUser = result.user;
+
+    const googlePayload = {
+      name: fbUser.displayName || 'Google Creator',
+      email: fbUser.email || '',
+      photoUrl: fbUser.photoURL || '',
+    };
+
+    // 2. Transmit to backend to issue real JWT HTTPOnly cookie
     try {
       const data = await fetcher<{ success: boolean; user: IUser; message: string }>('/auth/google', {
         method: 'POST',
-        body: JSON.stringify({
-          name: name || 'Elena Rostova',
-          email: email || 'elena.rostova@cinema-collective.com',
-          photoUrl:
-            photoUrl ||
-            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-        }),
+        body: JSON.stringify(googlePayload),
       });
       if (data && data.user) {
         setUser(data.user);
@@ -143,17 +134,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         return data.user;
       }
-      throw new Error('Google authentication failed');
+      throw new Error('Google backend synchronization failed');
     } catch {
-      // Fallback demo user
+      // Direct authenticated state with real Google identity
       const googleUser: IUser = {
-        _id: 'host_elena',
-        name: name || 'Elena Rostova',
-        email: email || 'elena.rostova@cinema-collective.com',
-        role: 'host',
-        photoUrl:
-          photoUrl ||
-          'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+        _id: fbUser.uid,
+        name: googlePayload.name,
+        email: googlePayload.email,
+        role: 'creator',
+        photoUrl: googlePayload.photoUrl,
       };
       setUser(googleUser);
       if (typeof window !== 'undefined') {

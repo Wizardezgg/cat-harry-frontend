@@ -58,86 +58,7 @@ const categories = [
   },
 ];
 
-const fallbackFeaturedStudios: any[] = [
-  {
-    _id: 'std_01',
-    title: 'Sonder Stage A: 40ft Pre-Lit White Cyclorama',
-    category: 'Film Soundstage',
-    hourlyRate: 145,
-    maxCapacity: 45,
-    location: 'Brooklyn Navy Yard, Building 77, Brooklyn, NY',
-    imageUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80',
-    amenities: ['40ft Seamless Cyclorama', 'Arri SkyPanels', '200A Cam-Lok Power'],
-    rating: 4.95,
-    reviewCount: 38,
-    featured: true,
-  },
-  {
-    _id: 'std_02',
-    title: 'Apex Natural Daylight Loft & Still Studio',
-    category: 'Photo Studio',
-    hourlyRate: 95,
-    maxCapacity: 25,
-    location: 'SoHo Cast Iron District, 102 Prince St, New York, NY',
-    imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
-    amenities: ['North Daylight', '14ft Ceilings', 'Profoto B10X Kit'],
-    rating: 4.91,
-    reviewCount: 44,
-    featured: true,
-  },
-  {
-    _id: 'std_03',
-    title: 'Echo Chamber: Dolby Atmos 7.1.4 Mixing Suite',
-    category: 'Recording & Podcast Suite',
-    hourlyRate: 110,
-    maxCapacity: 12,
-    location: 'Arts District, 830 E 3rd St, Los Angeles, CA',
-    imageUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80',
-    amenities: ['Dolby Atmos 7.1.4', 'Genelec SAM', 'Neumann U87 Mics'],
-    rating: 4.98,
-    reviewCount: 29,
-    featured: true,
-  },
-  {
-    _id: 'std_04',
-    title: 'Warehouse 47 Industrial Daylight & Concrete Studio',
-    category: 'Film Soundstage',
-    hourlyRate: 130,
-    maxCapacity: 60,
-    location: 'West Loop, 1140 W Fulton Market, Chicago, IL',
-    imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
-    amenities: ['Drive-In Access', 'Polished Concrete', '400A Distribution'],
-    rating: 4.88,
-    reviewCount: 31,
-    featured: true,
-  },
-  {
-    _id: 'std_05',
-    title: 'Solstice Sprung-Wood Movement & Dance Rehearsal Hall',
-    category: 'Dance & Rehearsal Hall',
-    hourlyRate: 75,
-    maxCapacity: 35,
-    location: 'Mission District, 2840 20th St, San Francisco, CA',
-    imageUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=1200&q=80',
-    amenities: ['Harlequin Sprung Floor', '30ft Mirror Wall', 'Bluetooth PA'],
-    rating: 4.93,
-    reviewCount: 22,
-    featured: true,
-  },
-  {
-    _id: 'std_06',
-    title: 'Komorebi Sunlit Ceramic Atelier & Fine Arts Loft',
-    category: 'Art & Ceramic Atelier',
-    hourlyRate: 65,
-    maxCapacity: 18,
-    location: 'South Congress, 1400 S Congress Ave, Austin, TX',
-    imageUrl: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=1200&q=80',
-    amenities: ['Shimpo Wheels', 'Clay Slab Roller', 'Deep Slurry Sinks'],
-    rating: 4.96,
-    reviewCount: 19,
-    featured: true,
-  },
-];
+
 
 const workflowSteps = [
   {
@@ -193,14 +114,13 @@ export default function HomePage() {
     async function loadFeatured() {
       try {
         const res = await fetcher<{ success: boolean; studios: IStudio[] }>('/studios/featured');
-        if (res.success && res.studios && res.studios.length > 0) {
+        if (res.success && res.studios) {
           setFeaturedStudios(res.studios);
         } else {
-          setFeaturedStudios(fallbackFeaturedStudios as IStudio[]);
+          setFeaturedStudios([]);
         }
       } catch (err) {
-        // Graceful fallback to pre-seeded production studios if backend is not yet started
-        setFeaturedStudios(fallbackFeaturedStudios as IStudio[]);
+        setFeaturedStudios([]);
       } finally {
         setLoading(false);
       }

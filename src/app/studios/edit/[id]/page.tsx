@@ -72,89 +72,11 @@ const presetImages = [
   },
 ];
 
-// Fallback seed catalog for instant pre-population
-const fallbackSeedDetails: Record<string, any> = {
-  std_01: {
-    title: 'Sonder Stage A: 40ft Pre-Lit White Cyclorama',
-    category: 'Film Soundstage',
-    hourlyRate: 145,
-    securityDeposit: 250,
-    maxCapacity: 45,
-    location: {
-      address: 'Brooklyn Navy Yard, Building 77',
-      city: 'Brooklyn',
-      state: 'NY',
-      zip: '11205',
-    },
-    imageUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80',
-    amenities: [
-      'Seamless Cyclorama Cove',
-      'Motorized Overhead Lighting Grid',
-      'Arri SkyPanel S60-C Softboxes',
-      'Three-Phase 200A Cam-Lok Power',
-      'Silent Acoustical HVAC (NC-20)',
-      'Drive-In Elephant Roll-Up Door',
-    ],
-    overview:
-      'Premier soundstage built specifically for commercial video and cinematic production. Features a 40ft two-wall infinity cyclorama, pre-hung motorized lighting grid with Arri SkyPanels, silent HVAC engineered for sound capture, and drive-in elephant doors for camera vehicles.',
-    ownerName: 'Elena Rostova',
-    ownerEmail: 'host@studiospace.com',
-  },
-  std_02: {
-    title: 'Apex Natural Daylight Loft & Still Studio',
-    category: 'Photo Studio',
-    hourlyRate: 95,
-    securityDeposit: 150,
-    maxCapacity: 25,
-    location: {
-      address: '102 Prince St, Floor 4',
-      city: 'New York',
-      state: 'NY',
-      zip: '10012',
-    },
-    imageUrl: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
-    amenities: [
-      'Motorized Overhead Lighting Grid',
-      'Hair & Makeup Vanity Station',
-      'Mid-Century Client Viewing Lounge',
-      '1Gbps Dedicated Fiber Internet',
-    ],
-    overview:
-      'Historic loft bathed in continuous northern light through 14ft industrial steel casement windows. Hardwood factory floors and modular mid-century furniture sets ideal for editorial fashion, lookbooks, and high-end portraiture.',
-    ownerName: 'Marcus Vance',
-    ownerEmail: 'marcus@studiospace.com',
-  },
-  std_03: {
-    title: 'Echo Chamber: Dolby Atmos 7.1.4 Mixing Suite',
-    category: 'Recording & Podcast Suite',
-    hourlyRate: 110,
-    securityDeposit: 200,
-    maxCapacity: 12,
-    location: {
-      address: '830 E 3rd St',
-      city: 'Los Angeles',
-      state: 'CA',
-      zip: '90013',
-    },
-    imageUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80',
-    amenities: [
-      'Dolby Atmos 7.1.4 Monitoring',
-      'Silent Acoustical HVAC (NC-20)',
-      '1Gbps Dedicated Fiber Internet',
-      'Private Client Tech Village',
-    ],
-    overview:
-      'Acoustically isolated control room tuned to Dolby Atmos specifications with Genelec SAM monitors, Avid S6 console, and floating concrete floors.',
-    ownerName: 'Elena Rostova',
-    ownerEmail: 'host@studiospace.com',
-  },
-};
-
 function EditStudioContent() {
   const params = useParams();
   const router = useRouter();
   const { user } = useAuth();
-  const studioId = (params?.id as string) || 'std_01';
+  const studioId = (params?.id as string) || '';
 
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -162,18 +84,16 @@ function EditStudioContent() {
   // Form State
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('Film Soundstage');
-  const [hourlyRate, setHourlyRate] = useState<number | ''>(145);
-  const [securityDeposit, setSecurityDeposit] = useState<number | ''>(200);
-  const [maxCapacity, setMaxCapacity] = useState<number | ''>(35);
+  const [hourlyRate, setHourlyRate] = useState<number | ''>('');
+  const [securityDeposit, setSecurityDeposit] = useState<number | ''>('');
+  const [maxCapacity, setMaxCapacity] = useState<number | ''>('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
-  const [state, setState] = useState('NY');
-  const [zip, setZip] = useState('10001');
   const [imageUrl, setImageUrl] = useState('');
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [overview, setOverview] = useState('');
-  const [ownerName, setOwnerName] = useState('Elena Rostova');
-  const [ownerEmail, setOwnerEmail] = useState('host@studiospace.com');
+  const [ownerName, setOwnerName] = useState(user?.name || '');
+  const [ownerEmail, setOwnerEmail] = useState(user?.email || '');
 
   // Slug generator for canonical permalink preview
   const canonicalSlug = useMemo(() => {
@@ -198,39 +118,20 @@ function EditStudioContent() {
           setSecurityDeposit(st.securityDeposit || 200);
           setMaxCapacity(st.maxCapacity || st.capacity || 30);
           setAddress(
-            typeof st.location === 'object' ? st.location.address || '' : st.location || ''
+            st.address || (typeof st.location === 'object' ? st.location.address || '' : st.location || '')
           );
-          setCity(typeof st.location === 'object' ? st.location.city || 'New York' : 'New York');
-          setState(typeof st.location === 'object' ? st.location.state || 'NY' : 'NY');
-          setZip(typeof st.location === 'object' ? st.location.zip || '10001' : '10001');
+          setCity(st.city || (typeof st.location === 'object' ? st.location.city || '' : '') || '');
           setImageUrl(st.imageUrl || (st.images && st.images[0]) || '');
           setSelectedAmenities(st.amenities || []);
           setOverview(st.overview || st.description || '');
-          setOwnerName(st.ownerName || user?.name || 'Elena Rostova');
-          setOwnerEmail(st.ownerEmail || user?.email || 'host@studiospace.com');
+          setOwnerName(st.ownerName || user?.name || '');
+          setOwnerEmail(st.ownerEmail || user?.email || '');
           setLoading(false);
           return;
         }
       } catch {
-        // Fall back to seed details
+        // Not found
       }
-
-      // Check fallback seeds
-      const seed = fallbackSeedDetails[studioId] || fallbackSeedDetails.std_01;
-      setTitle(seed.title);
-      setCategory(seed.category);
-      setHourlyRate(seed.hourlyRate);
-      setSecurityDeposit(seed.securityDeposit);
-      setMaxCapacity(seed.maxCapacity);
-      setAddress(seed.location.address);
-      setCity(seed.location.city);
-      setState(seed.location.state);
-      setZip(seed.location.zip);
-      setImageUrl(seed.imageUrl);
-      setSelectedAmenities(seed.amenities);
-      setOverview(seed.overview);
-      setOwnerName(user?.name || seed.ownerName);
-      setOwnerEmail(user?.email || seed.ownerEmail);
       setLoading(false);
     }
 
@@ -270,19 +171,22 @@ function EditStudioContent() {
       return;
     }
 
+    if (!address.trim() || !city.trim()) {
+      toast.error('Address and City are required.');
+      return;
+    }
+
     setSubmitting(true);
 
     const payload = {
       title: title.trim(),
       category,
       hourlyRate: Number(hourlyRate),
-      securityDeposit: Number(securityDeposit) || 150,
+      securityDeposit: Number(securityDeposit) || 0,
       maxCapacity: Number(maxCapacity) || 15,
       location: {
         address: address.trim(),
-        city: city.trim() || 'New York',
-        state: state.trim() || 'NY',
-        zip: zip.trim() || '10001',
+        city: city.trim(),
       },
       imageUrl: imageUrl.trim(),
       amenities: selectedAmenities,
@@ -621,60 +525,22 @@ function EditStudioContent() {
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="space-y-1.5">
-                <label
-                  htmlFor="city"
-                  className="font-mono text-xs uppercase tracking-wider text-on-surface-variant"
-                >
-                  City
-                </label>
-                <input
-                  id="city"
-                  type="text"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  placeholder="New York"
-                  required
-                  className="w-full px-4 py-2.5 rounded-xl bg-surface-container border border-white/10 text-xs text-on-surface font-sans focus:outline-none focus:border-primary/60 transition-all"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label
-                  htmlFor="state"
-                  className="font-mono text-xs uppercase tracking-wider text-on-surface-variant"
-                >
-                  State / Region
-                </label>
-                <input
-                  id="state"
-                  type="text"
-                  value={state}
-                  onChange={(e) => setState(e.target.value)}
-                  placeholder="NY"
-                  required
-                  className="w-full px-4 py-2.5 rounded-xl bg-surface-container border border-white/10 text-xs text-on-surface font-sans focus:outline-none focus:border-primary/60 transition-all"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label
-                  htmlFor="zip"
-                  className="font-mono text-xs uppercase tracking-wider text-on-surface-variant"
-                >
-                  Postal Code
-                </label>
-                <input
-                  id="zip"
-                  type="text"
-                  value={zip}
-                  onChange={(e) => setZip(e.target.value)}
-                  placeholder="10001"
-                  required
-                  className="w-full px-4 py-2.5 rounded-xl bg-surface-container border border-white/10 text-xs text-on-surface font-sans focus:outline-none focus:border-primary/60 transition-all"
-                />
-              </div>
+            <div className="space-y-1.5">
+              <label
+                htmlFor="city"
+                className="font-mono text-xs uppercase tracking-wider text-on-surface-variant"
+              >
+                City / Metro
+              </label>
+              <input
+                id="city"
+                type="text"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                placeholder="e.g. Dhaka"
+                required
+                className="w-full px-4 py-2.5 rounded-xl bg-surface-container border border-white/10 text-xs text-on-surface font-sans focus:outline-none focus:border-primary/60 transition-all"
+              />
             </div>
           </div>
         </section>

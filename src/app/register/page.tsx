@@ -151,7 +151,7 @@ export default function RegisterPage() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Elena Rostova"
+                placeholder="e.g. Alex Morgan"
                 required
                 className="w-full px-4 py-2.5 rounded-xl bg-surface-container border border-white/10 text-xs text-on-surface placeholder:text-outline/60 font-sans focus:outline-none focus:border-primary/60 transition-all"
               />
@@ -171,7 +171,7 @@ export default function RegisterPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="elena@cinema-collective.com"
+                placeholder="you@domain.com"
                 required
                 className="w-full px-4 py-2.5 rounded-xl bg-surface-container border border-white/10 text-xs text-on-surface placeholder:text-outline/60 font-sans focus:outline-none focus:border-primary/60 transition-all"
               />

@@ -27,70 +27,9 @@ import {
   Video,
 } from 'lucide-react';
 
-// Seed fallback reservations for instant examiner evaluation
-const fallbackBookings: IBooking[] = [
-  {
-    _id: 'bk_9011',
-    studioId: 'std_01',
-    studioTitle: 'Sonder Stage A: 40ft Pre-Lit White Cyclorama',
-    studioImage:
-      'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80',
-    studioHourlyRate: 145,
-    userEmail: 'creator@studiospace.com',
-    userName: 'Marcus Vance',
-    bookingDate: '2026-11-14',
-    startTime: '10:00',
-    endTime: '16:00',
-    totalHours: 6,
-    totalAmount: 1020, // 6 * 145 + 150 deposit
-    status: 'Confirmed',
-    specialRequests: '5-ton grip truck parking permit requested. Lighting team load-in at 09:30 AM.',
-    createdAt: '2026-11-01T10:00:00Z',
-    updatedAt: '2026-11-01T10:00:00Z',
-  },
-  {
-    _id: 'bk_9012',
-    studioId: 'std_02',
-    studioTitle: 'Apex Natural Daylight Loft & Still Studio',
-    studioImage:
-      'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
-    studioHourlyRate: 95,
-    userEmail: 'creator@studiospace.com',
-    userName: 'Marcus Vance',
-    bookingDate: '2026-11-18',
-    startTime: '13:00',
-    endTime: '17:00',
-    totalHours: 4,
-    totalAmount: 530, // 4 * 95 + 150 deposit
-    status: 'Pending',
-    specialRequests: 'Editorial fashion lookbook shoot with 4 models and wardrobe stylist.',
-    createdAt: '2026-11-03T14:30:00Z',
-    updatedAt: '2026-11-03T14:30:00Z',
-  },
-  {
-    _id: 'bk_9013',
-    studioId: 'std_03',
-    studioTitle: 'Echo Chamber: Dolby Atmos 7.1.4 Mixing Suite',
-    studioImage:
-      'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80',
-    studioHourlyRate: 110,
-    userEmail: 'creator@studiospace.com',
-    userName: 'Marcus Vance',
-    bookingDate: '2026-10-28',
-    startTime: '11:00',
-    endTime: '15:00',
-    totalHours: 4,
-    totalAmount: 590, // 4 * 110 + 150 deposit
-    status: 'Completed',
-    specialRequests: 'Surround sound mastering session with Pro Tools Ultimate session export.',
-    createdAt: '2026-10-20T09:15:00Z',
-    updatedAt: '2026-10-28T16:00:00Z',
-  },
-];
-
 function MyBookingsContent() {
   const { user } = useAuth();
-  const [bookings, setBookings] = useState<IBooking[]>(fallbackBookings);
+  const [bookings, setBookings] = useState<IBooking[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Filters
@@ -104,18 +43,23 @@ function MyBookingsContent() {
 
   useEffect(() => {
     async function loadBookings() {
+      if (!user?.email) {
+        setLoading(false);
+        return;
+      }
+
       try {
+        const emailQuery = `?userEmail=${encodeURIComponent(user.email)}`;
         const res = await fetcher<{ success: boolean; bookings: IBooking[] }>(
-          '/bookings/my-bookings'
+          `/bookings/my-bookings${emailQuery}`
         );
-        if (res.success && res.bookings && res.bookings.length > 0) {
+        if (res.success && res.bookings) {
           setBookings(res.bookings);
         } else {
-          setBookings(fallbackBookings);
+          setBookings([]);
         }
       } catch {
-        // Fallback to demo reservations
-        setBookings(fallbackBookings);
+        setBookings([]);
       } finally {
         setLoading(false);
       }

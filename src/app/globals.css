@@ -6,31 +6,85 @@
 @tailwind utilities;
 
 :root {
-  --background: #121318;
+  --background: #0f1015;
   --surface: #121318;
-  --surface-container: #1e1f25;
+  --surface-container-lowest: #0d0e13;
   --surface-container-low: #1a1b20;
+  --surface-container: #1e1f25;
   --surface-container-high: #292a2f;
-  --on-surface: #e3e1e9;
-  --on-surface-variant: #d3c4b5;
-  --primary: #ffcd8b;
-  --primary-container: #e2b170;
-  --outline: #9c8f80;
+  --surface-container-highest: #34343a;
+  --on-surface: #f1f0f5;
+  --on-surface-variant: #c4b5a5;
+  --primary: #f59e0b;
+  --primary-container: #d97706;
+  --on-primary: #121318;
+  --outline: #8e8378;
+  --outline-variant: #4f4539;
+  --border-color: rgba(255, 255, 255, 0.08);
   color-scheme: dark;
 }
 
+html.light,
 .light {
-  --background: #fbf9f4;
-  --surface: #fbf9f4;
-  --surface-container: #f2eee6;
-  --surface-container-low: #f7f4ec;
-  --surface-container-high: #e8e2d7;
-  --on-surface: #1c1b18;
-  --on-surface-variant: #50463c;
-  --primary: #8a5814;
-  --primary-container: #f5c48b;
-  --outline: #7f756b;
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f8fafc;
+  --surface-container: #f1f5f9;
+  --surface-container-high: #e2e8f0;
+  --surface-container-highest: #cbd5e1;
+  --on-surface: #0f172a;
+  --on-surface-variant: #475569;
+  --primary: #d97706;
+  --primary-container: #b45309;
+  --on-primary: #ffffff;
+  --outline: #64748b;
+  --outline-variant: #cbd5e1;
+  --border-color: rgba(0, 0, 0, 0.08);
   color-scheme: light;
+}
+
+html.light body {
+  background-color: var(--background);
+  color: var(--on-surface);
+}
+
+html.light .border-white\/10,
+html.light .border-white\/5 {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+html.light .bg-surface {
+  background-color: var(--surface) !important;
+}
+
+html.light .bg-surface-container {
+  background-color: var(--surface-container) !important;
+}
+
+html.light .bg-surface-container-low {
+  background-color: var(--surface-container-low) !important;
+}
+
+html.light .bg-surface-container-high {
+  background-color: var(--surface-container-high) !important;
+}
+
+html.light .text-on-surface {
+  color: var(--on-surface) !important;
+}
+
+html.light .text-on-surface-variant {
+  color: var(--on-surface-variant) !important;
+}
+
+html.light .text-outline {
+  color: var(--outline) !important;
+}
+
+html.light .shadow-black\/20,
+html.light .shadow-black\/40 {
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06) !important;
 }
 
 body {

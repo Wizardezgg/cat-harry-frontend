@@ -111,6 +111,9 @@ export function BookingModal({
         totalHours,
         totalPrice: grandTotal,
         specialRequests,
+        userId: user._id || user.email,
+        userName: user.name || 'Verified Guest',
+        userEmail: user.email,
       };
 
       const res = await fetcher<{ success: boolean; message: string; bookingId?: string }>('/bookings', {

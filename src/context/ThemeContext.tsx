@@ -21,8 +21,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const initialTheme: Theme = savedTheme || 'dark';
     
     setTheme(initialTheme);
-    document.documentElement.classList.toggle('dark', initialTheme === 'dark');
-    document.documentElement.classList.toggle('light', initialTheme === 'light');
+    document.documentElement.classList.remove('dark', 'light');
+    document.documentElement.classList.add(initialTheme);
     document.documentElement.style.colorScheme = initialTheme;
     setMounted(true);
   }, []);
@@ -31,8 +31,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const nextTheme: Theme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
     localStorage.setItem('studiospace_theme', nextTheme);
-    document.documentElement.classList.toggle('dark', nextTheme === 'dark');
-    document.documentElement.classList.toggle('light', nextTheme === 'light');
+    document.documentElement.classList.remove('dark', 'light');
+    document.documentElement.classList.add(nextTheme);
     document.documentElement.style.colorScheme = nextTheme;
   };
 

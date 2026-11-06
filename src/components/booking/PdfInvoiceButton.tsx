@@ -97,12 +97,12 @@ export function PdfInvoiceButton({
       doc.setTextColor(227, 225, 233);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(11);
-      doc.text(booking.userName || 'Marcus Vance', 24, 63);
+      doc.text(booking.userName || 'Verified Guest', 24, 63);
 
       doc.setTextColor(156, 143, 128);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
-      doc.text(booking.userEmail || 'creator@studiospace.com', 24, 69);
+      doc.text(booking.userEmail || 'guest@aperture.io', 24, 69);
       doc.text(`Account Verified • Escrow Protected`, 24, 75);
 
       // Right: Production Workspace Details
@@ -114,14 +114,14 @@ export function PdfInvoiceButton({
       doc.setTextColor(227, 225, 233);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
-      const studioTitle = booking.studioTitle || 'Sonder Stage A: 40ft Cyclorama';
+      const studioTitle = booking.studioTitle || 'Production Workspace';
       const truncatedTitle = studioTitle.length > 36 ? studioTitle.slice(0, 34) + '...' : studioTitle;
       doc.text(truncatedTitle, 110, 63);
 
       doc.setTextColor(156, 143, 128);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
-      doc.text(`Reservation Date: ${booking.bookingDate || '2026-11-10'}`, 110, 69);
+      doc.text(`Reservation Date: ${booking.bookingDate || new Date().toISOString().split('T')[0]}`, 110, 69);
       doc.text(
         `Time Slot: ${booking.startTime || '10:00'} - ${booking.endTime || '14:00'} (${
           booking.totalHours || 4
