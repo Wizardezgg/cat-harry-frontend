@@ -14,17 +14,6 @@
 
 ---
 
-## 🔑 Test Examiner Credentials (1-Click Auth Ready)
-
-Pre-seeded credentials with instant one-click test fill buttons located directly on `/login`, `/register`, and `/add-studio`:
-
-| Role | Account Email | Password | Display Name | Permissions |
-| :--- | :--- | :--- | :--- | :--- |
-| **Studio Host** | `host@studiospace.com` | `Host@1234` | Elena Rostova | List spaces, edit stages, manage roster, delete stages |
-| **Creator** | `creator@studiospace.com` | `Creator@1234` | Marcus Vance | Scout studios, book hours, cancel reservations, export PDF invoices |
-
----
-
 ## ✨ Key Platform Features
 
 ### 1. Architectural Brand Identity & Design System
